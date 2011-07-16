@@ -3,4 +3,4 @@ django-annoying
 django-debug-toolbar
 django-extensions
 python-odesk
--e git+git://github.com/hotsyk/django-odesk.git#egg=django_odesk-0.0.3
+-e git+git://github.com/sergray/django-odesk.git@stable#egg=django_odesk_sergray
