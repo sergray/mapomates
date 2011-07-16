@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>mapomates</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+<p>Hello, {{ user.username }}</p>
+{% else %}
+<p>Please, <a href="{% url django_odesk.auth.views.authenticate %}">authenticate</a> with <a href="http://www.odesk.com">oDesk</a></p>
+{% endif %}
+</body>
+</html>
