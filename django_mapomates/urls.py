@@ -6,6 +6,8 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^odesk_auth/', include('django_odesk.auth.urls')),
+    (r'^accounts/$', 'django.contrib.auth.views.login'),
+    (r'^accounts/', include('django.contrib.auth.urls')),
     url(r'', include('mapomates.urls')),
     # Examples:
     # url(r'^$', 'django_mapomates.views.home', name='home'),

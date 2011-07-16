@@ -1,4 +1,6 @@
 Django==1.3
 django-annoying
--e git+git@github.com:odesk/python-odesk.git@0.1.3#egg=python_odesk_0.1.3
--e git+git@github.com:sergray/django-odesk.git@stable#egg=django_odesk_sergray
+django-debug-toolbar
+django-extensions
+python-odesk
+-e git+git://github.com/hotsyk/django-odesk.git#egg=django_odesk-0.0.3
