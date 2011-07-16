@@ -1,13 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>mapomates</title>
+    <title>mapomates</title>
+    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.ie.css" /><![endif]-->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
+    <script type="text/javascript">
+        (function ($) {
+            var STATIC_URL = '/static/';
+
+            $(document).ready(function () {
+                var map = new L.Map('map');
+                console.log('success');
+                var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png';
+                var cloudmadeAttrib = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
+                var cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttrib});
+               
+                var london = new L.LatLng(51.505, -0.09); 
+                map.setView(london, 2).addLayer(cloudmade);
+
+
+                var ProfileIcon = L.Icon.extend({
+                    //iconUrl: '../docs/images/leaf-green.png',
+                    //shadowUrl: '../docs/images/leaf-shadow.png',
+                    iconSize: new L.Point(50, 50),
+                    //shadowSize: new L.Point(68, 95),
+                    //iconAnchor: new L.Point(22, 94),
+                    //popupAnchor: new L.Point(-3, -76)
+                });
+                
+                $.get(STATIC_URL+'stubs/profiles.js', function (data) {
+                    var profiles = $.parseJSON(data);
+                    console.log(profiles);
+                    $.each(profiles, function (index, profile) {
+                        console.log(profile);
+                        var markerIcon = new ProfileIcon(profile.pic);
+                        var markerLocation = new L.LatLng(profile.coords[0], profile.coords[1]);
+                        var marker = new L.Marker(markerLocation, {icon: markerIcon});
+                        marker.bindPopup("<p><strong>"+profile.name+"</strong></p><p>"+profile.location+"</p>");
+                        map.addLayer(marker);
+                    })
+                });
+                
+                //$.getJSON(STATIC_URL+'stubs/profiles.js', function (data) {
+                //});
+
+            })
+        })(jQuery)
+    </script>
 </head>
 <body>
-{% if user.is_authenticated %}
-<p>Hello, {{ user.username }}</p>
-{% else %}
-<p>Please, <a href="{% url django_odesk.auth.views.authenticate %}">authenticate</a> with <a href="http://www.odesk.com">oDesk</a></p>
-{% endif %}
+    {% if user.is_authenticated %}
+    <p>Hello, {{ user.username }}</p>
+    {% else %}
+    <p>Please, <a href="{% url django_odesk.auth.views.authenticate %}">authenticate</a> with <a href="http://www.odesk.com">oDesk</a></p>
+    {% endif %}
+    <div id="map" style="height: 400px">
+
+    </div> 
 </body>
 </html>
