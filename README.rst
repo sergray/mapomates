@@ -8,6 +8,7 @@ Installation
 
 $ virtualenv ve
 $ ve/bin/pip install -r requirements.txt
+$ cp django_mapomates/localsettings.py.def django_mapomates/localsettings.py
 
 Update django_mapomates/local_settings.py and you're good to go
 
