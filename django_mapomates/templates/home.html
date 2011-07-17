@@ -45,8 +45,9 @@
                     //popupAnchor: new L.Point(-3, -76)
                 });
                 
-                $.get(STATIC_URL+'stubs/profiles.js', function (data) {
-                    var profiles = $.parseJSON(data);
+                $.get('{% url all-json-profiles %}', function (data) {
+                    //var profiles = $.parseJSON(data);
+                    var profiles = data;
                     console.log(profiles);
                     $.each(profiles, function (index, profile) {
                         console.log(profile);
