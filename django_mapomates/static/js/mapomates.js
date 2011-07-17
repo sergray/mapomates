@@ -1,5 +1,3 @@
-var username_cache = [];
-
 var profiles = [];
 
 var Map;
@@ -10,7 +8,6 @@ var ProfileIcon = L.Icon.extend({
     iconSize: new L.Point(28, 45),
     shadowSize: new L.Point(50, 45),
     iconAnchor: new L.Point(14, 45),
-    //popupAnchor: new L.Point(-3, -76)
 });
 
 
@@ -66,6 +63,8 @@ function on_odesk_profile(data) {
     profile.name = profile['dev_full_name'];
     profile.location = profile['dev_city']+', '+profile['dev_country'];
     profile.pic = profile['dev_portrait_50'];
+    if (profile.pic == '') 
+        profile.pic = STATIC_URL+'img/noimage.png';
     profile.pic_small = profile['dev_portrait_32'];
     profile.coords = [0, 0];
     index = profiles.push(profile)-1;
@@ -98,38 +97,5 @@ $(document).ready(function () {
         $.get(proxy_url(url), on_odesk_profile);
     });
     
-    /*
-    $.get(PROFILES_URL, function (data) {
-        var profiles = $.parseJSON(data);
-        //var profiles = data;
-        console.log(profiles);
-        $.each(profiles, function (index, profile) {
-            
-            if (username_cache.indexOf(profile.username) > -1) {
-                //Don't do anything if this profile was already processed
-                return 
-            }
-            username_cache.push(profile.username);
-            createMarker(profile, index+1);
-
-            console.log(profile);
-            //var markerIcon = new ProfileIcon(profile.pic);
-            if (profile.username == USERNAME) {
-                var iconUrl = STATIC_URL+'img/mapicons-odesk/special.png';
-            }
-            else {
-                var iconUrl = STATIC_URL+'img/mapicons-odesk/number_'+(index+1)+'.png';
-            }
-            var profileHTML = ""+ 
-                "<tr>"+
-                    "<td><img src='"+iconUrl+"'/></td>"+
-                    "<td><img src='"+profile.pic+"'/></td>"+
-                    "<td><p><strong>"+profile.name+"</strong></p><p>"+profile.location+"</p></td>"+
-                "<tr>"+
-            "";
-            $('#profiles table').append($(profileHTML));
-        })
-    });
-    */
     
 })
