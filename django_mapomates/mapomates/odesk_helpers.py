@@ -159,14 +159,7 @@ def get_user_reference(client):
     """ Return reference for user of oDesk client """
     role = None
     try:
-        team = client.hr.get_teams()[0]
-    except Exception, exc:
-        logging.error('Failed to get first team: %r' % exc)
-        return role
-    try:
-        role = client.hr.get_user_role(
-            team_reference=team['reference']
-        )['userrole']
+        role = client.hr.get_user_role()['userrole'][0]
     except Exception, exc:
         logging.error('Failed to get role for %r team: %r' % (team, exc))
         return role
