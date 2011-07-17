@@ -68,14 +68,13 @@ function update_coords(profile_index) {
     });
 }
 
-function on_odesk_profile(data) {
+function on_odesk_profile(data, index) {
     console.log(data);
     var profile = data;
     console.log('SUCCESS ')
     console.log(profile);
     if (profile.portrait == '') 
         profile.portrait = STATIC_URL+'img/noimage.png';
-    index = profiles.push(profile)-1;
     createMarker2(profile, index);
 }
 
@@ -95,7 +94,9 @@ $(document).ready(function () {
     $.each(PROFILES, function (index, ciphertext) {
         //var url = 'http://www.odesk.com/api/profiles/v1/providers/'+ciphertext+'/brief.json';
         var url = '/profile/'+ciphertext+'/';
-        $.get(url, on_odesk_profile);
+        $.get(url, function(data) {
+            on_odesk_profile(data, index);
+        });
     });
     
     
