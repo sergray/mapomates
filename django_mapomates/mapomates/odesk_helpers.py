@@ -21,6 +21,8 @@ True
 
 import logging
 import uuid
+import urlparse
+
 
 from django.db import models, transaction
 
@@ -151,3 +153,34 @@ def sync_user_profile(client, user_reference):
         logging.error("Failed to get provider for %r: %r" % (cipher_text, exc))
         return
     update_profile(provider, oprofile)
+
+
+def get_user_reference(client):
+    """ Return reference for user of oDesk client """
+    role = None
+    try:
+        team = client.hr.get_teams()[0]
+    except Exception, exc:
+        logging.error('Failed to get first team: %r' % exc)
+        return role
+    try:
+        role = client.hr.get_user_role(
+            team_reference=team['reference']
+        )['userrole']
+    except Exception, exc:
+        logging.error('Failed to get role for %r team: %r' % (team, exc))
+        return role
+    return role['user__reference']
+
+
+def get_cipher_text(public_url):
+    path = urlparse.urlsplit(public_url).path
+    cipher = path.split('/')[-1]
+    return cipher
+
+
+def get_user_cipher_text(client, reference):
+    """ Return cipher text for user of oDesk client """
+    user = client.hr.get_user(reference)
+    public_url = user['public_url']
+    return get_cipher_text(public_url)

@@ -36,7 +36,6 @@ def get_profile(request, cipher_text):
         ])
         # TODO run asynchronously
         lat, lon = get_coords(location)
-        #import pdb; pdb.set_trace()
         profile = Profile.objects.create(
             cipher_text=cipher_text,
             full_name=provider['dev_full_name'],

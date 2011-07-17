@@ -11,8 +11,17 @@ var ProfileIcon = L.Icon.extend({
 });
 
 
+function profile_url(cipher_text) {
+    return 'https://www.odesk.com/users/' + cipher_text;
+}
+
+
 function createMarker2 (profile, number) {
-    var iconUrl = STATIC_URL+'img/mapicons-odesk/number_'+number+'.png';
+    var iconUrl = STATIC_URL;
+    if(number==0) 
+        iconUrl += 'img/mapicons-odesk/special.png';
+    else
+        iconUrl += 'img/mapicons-odesk/number_'+number+'.png';
     var markerIcon = new ProfileIcon(iconUrl);
     var markerLocation = new L.LatLng(Number(profile.lat), Number(profile.lon));
     if (profile.username == USERNAME) {
@@ -24,7 +33,7 @@ function createMarker2 (profile, number) {
     var popupHTML = ""+ 
         "<table style='width:200px'>" +
             "<tr>"+
-                "<td><img src='"+profile.portrait+"'/></td><td><p><strong>"+profile.full_name+"</strong></p><p>"+profile.location+"</p></td>"+
+                "<td><img src='"+profile.portrait+"'/></td><td><p><strong><a href='"+profile_url(profile.cipher_text)+"'>"+profile.full_name+"</a></strong></p><p>"+profile.location+"</p></td>"+
             "<tr>"+
         "</table>" +
     "";
@@ -35,8 +44,7 @@ function createMarker2 (profile, number) {
             "<td><img src='"+iconUrl+"'/></td>"+
             "<td><img src='"+profile.portrait+"'/></td>"+
             "<td>" +
-            "<p><strong>"+profile.full_name+"</strong>"+
-            " (<a href='https://www.odesk.com/users/"+profile.cipher_text+"' target='_blank'>Profile</a>)</p>"+
+            "<p><strong><a href='"+profile_url(profile.cipher_text)+"' target='_blank'>"+profile.full_name+"</a></strong>"+
             "<p>"+profile.location+"</p></td>"+
         "<tr>"+
     "";
@@ -68,7 +76,7 @@ function on_odesk_profile(data) {
     if (profile.portrait == '') 
         profile.portrait = STATIC_URL+'img/noimage.png';
     index = profiles.push(profile)-1;
-    createMarker2(profile, index+1);
+    createMarker2(profile, index);
 }
 
 $(document).ready(function () {

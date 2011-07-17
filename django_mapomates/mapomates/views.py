@@ -6,9 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import simplejson as json
 
-from annoying.decorators import render_to
+from django_odesk.core.clients import RequestClient
+
+from annoying.decorators import render_to, ajax_request
 
 from mapomates.models import Provider, Team, Membership
+from mapomates.odesk_helpers import get_user_reference, get_user_cipher_text
+
 
 meanings = [
     "Two Brave Developers",
@@ -17,34 +21,43 @@ meanings = [
     "Two Business Days",
 ]
 
+
 @login_required
 @render_to('home.html')
 def home(request):
-    """ Show map with users """
+    """ Show map with users including authenticated user """
     query = request.GET
     profiles = []
+    client = RequestClient(request)
+
+    # TODO better caching
+    if not 'cipher_text' in request.session:
+        user_ref = get_user_reference(client)
+        request.session['cipher_text'] = get_user_cipher_text(client, user_ref)
+    cipher_text = request.session['cipher_text']
+    profiles.append(cipher_text)
+
     if query:
         url = 'http://www.odesk.com/api/profiles/v1/search/providers.json?'+\
                 urllib.urlencode(request.GET)
         data = json.loads(urllib2.urlopen(url).read())
-        profiles = [prov['ciphertext'] for prov in data['providers']['provider']]
-    tbd_meaning = random.choice(meanings) 
-    return {'tbd_meaning': tbd_meaning, 'profiles': json.dumps(profiles[:20])}
+        profiles += [prov['ciphertext'] for prov in data['providers']['provider']]
+    tbd_meaning = random.choice(meanings)
+    return {'tbd_meaning': tbd_meaning, 'profiles': json.dumps(profiles[:21])}
 
 
-def ajax_response(data):
-    json_data = json.dumps(data)
-    return HttpResponse(json_data, content_type='application/json')
-
+@ajax_request
 def ajax_proxy(request):
     """
     A proxy method to bypass cross-domain AJAX restriction
     """
     url = urllib.unquote(request.GET['url'])
     data = urllib2.urlopen(url).read()
-    return ajax_response(data)
+    return data
+
 
 @login_required
+@ajax_request
 def users_list(request):
     user = request.user
     mates_list = []
@@ -52,7 +65,7 @@ def users_list(request):
         provider = Provider.objects.get(username=user.username)
     except Provider.DoesNotExist:
         # TODO queue update task and return message about pending result
-        return ajax_response(mates_list)
+        return mates_list
     providers = Provider.objects.filter(
         teams__in=provider.teams.all()
     ).defer('teams')
@@ -65,10 +78,9 @@ def users_list(request):
                 'pic': p.portrait_url,
                 'location': p.location,
                 'coords': [float(p.lat), float(p.lon)],
-                #'coords': [0.0, 0.0],  # FIXME when lat, lon will be geocoded
             }
         except Exception, exc:
             logging.error("Skipping mate_data for %r: %r" % (p, exc))
             continue
         mates_list.append(mate_data)
-    return ajax_response(mates_list)
+    return mates_list
