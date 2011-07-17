@@ -11,8 +11,10 @@
 >>> for t in sync_teams(cli):
 ...     users = sync_team_users(cli, t.reference)
 >>> from mapomates.models import Provider
+>>> from mapomates.geo_helpers import get_coords
 >>> for u in Provider.objects.all():
 ...     sync_user_profile(cli, u.reference)
+...     update_profile_coords(u, get_coords(u.location))
 >>> len(Provider.objects.all()) > 0
 True
 """
@@ -93,7 +95,9 @@ def sync_team_users(client, team_reference):
     try:
         odesk_users = client.hr.get_team_users(team_reference)
     except Exception, exc:
-        logging.error("Failed to fetch %r team users: %r" % (team_reference, exc))
+        logging.error(
+            "Failed to fetch %r team users: %r" % (team_reference, exc)
+        )
         return providers
     update_id = uuid.uuid4().hex
     for ouser in odesk_users:
@@ -117,6 +121,21 @@ def update_profile(provider, oprofile):
     for a, k in attr2key:
         setattr(provider, a, oprofile[k])
     provider.save()
+
+
+@transaction.commit_manually
+def update_profile_coords(provider, coords):
+    try:
+        provider.lat, provider.lon = coords
+    except Exception, exc:
+        logging.error(
+            'failed set coords %r to provider %r: %r' % (
+                coords, provider, exc
+            )
+        )
+        transaction.rollback()
+    else:
+        transaction.commit()
 
 
 def sync_user_profile(client, user_reference):

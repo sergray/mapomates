@@ -45,6 +45,11 @@ class Provider(OdeskObject):
         return cipher
 
 
+    @property
+    def location(self):
+        return ', '.join([self.city, self.country])
+
+
 class Membership(models.Model):
     team = models.ForeignKey(Team)
     provider = models.ForeignKey(Provider)
