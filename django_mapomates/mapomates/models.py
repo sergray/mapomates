@@ -1,5 +1,3 @@
-import urlparse
-
 from django.db import models
 
 
@@ -16,7 +14,7 @@ class OdeskObject(models.Model):
 
 class Team(OdeskObject):
     pass
-    
+
 
 class Provider(OdeskObject):
     username = models.CharField(max_length=80, unique=True, db_index=True)
@@ -40,10 +38,8 @@ class Provider(OdeskObject):
 
     @property
     def cipher_text(self):
-        path = urlparse.urlsplit(self.profile_url).path
-        cipher = path.split('/')[-1]
-        return cipher
-
+        from mapomates.odesk_helpers import get_cipher_text
+        return get_cipher_text(self.profile_url)
 
     @property
     def location(self):
