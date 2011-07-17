@@ -19,6 +19,7 @@
         {% endif %}
         var CLOUDMADE_KEY = 'f5293033387946df9e5a60a0dae6c9a0';
         var CLOUDMADE_THEME = '41387';
+        var PROFILES = {{ profiles|safe }};
 
     </script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/mapomates.js"></script>
@@ -30,9 +31,8 @@
     {% else %}
     {% endif %}
     <div id="controls">
-        <form id="search_form" action="http://www.odesk.com/api/profiles/v1/search/providers.json" method="get">
+        <form id="search_form" action="." method="get">
             <p><input id="search" type="text" name="q" value=""/><button type="submit">Search</button></p>
-            <input type="hidden" name="Page" value="0;10"/>
         </form>
     </div>
     <div class="wrapper">

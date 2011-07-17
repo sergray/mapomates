@@ -21,8 +21,15 @@ meanings = [
 @render_to('home.html')
 def home(request):
     """ Show map with users """
+    query = request.GET
+    profiles = []
+    if query:
+        url = 'http://www.odesk.com/api/profiles/v1/search/providers.json?'+\
+                urllib.urlencode(request.GET)
+        data = json.loads(urllib2.urlopen(url).read())
+        profiles = [prov['ciphertext'] for prov in data['providers']['provider']]
     tbd_meaning = random.choice(meanings) 
-    return {'tbd_meaning': tbd_meaning}
+    return {'tbd_meaning': tbd_meaning, 'profiles': json.dumps(profiles[:10])}
 
 
 def ajax_response(data):
@@ -34,7 +41,6 @@ def ajax_proxy(request):
     A proxy method to bypass cross-domain AJAX restriction
     """
     url = urllib.unquote(request.GET['url'])
-    print "DEBUG: " + url
     data = urllib2.urlopen(url).read()
     return ajax_response(data)
 

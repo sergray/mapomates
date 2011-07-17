@@ -81,13 +81,6 @@ function on_odesk_search(data) {
 }
 $(document).ready(function () {
 
-    $('#search_form').submit(function(evt) {
-        evt.preventDefault();
-        var url = $(this).attr('action')+'?'+$(this).serialize();
-        $.get(proxy_url(url), on_odesk_search);
-        $('#search').val('');
-    });
-
     var map = new L.Map('map');
     console.log('success');
     //var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png';
@@ -99,45 +92,11 @@ $(document).ready(function () {
     map.setView(london, 2).addLayer(cloudmade);
     Map = map;
 
-
-    /*var ProfileIcon = L.Icon.extend({
-        iconUrl: STATIC_URL+'img/mapicons/number_0.png',
-        shadowUrl: STATIC_URL+'img/mapicons/shadow.png',
-        iconSize: new L.Point(32, 37),
-        shadowSize: new L.Point(51, 37),
-        //iconAnchor: new L.Point(22, 94),
-        //popupAnchor: new L.Point(-3, -76)
-    });*/
-
-
-    function createMarker (profile, number) {
-        if (profile.username == USERNAME) {
-            var iconUrl = STATIC_URL+'img/mapicons-odesk/special.png';
-        }
-        else {
-            var iconUrl = STATIC_URL+'img/mapicons-odesk/number_'+number+'.png';
-        }
-        var markerIcon = new ProfileIcon(iconUrl);
-        var markerLocation = new L.LatLng(profile.coords[0], profile.coords[1]);
-        if (profile.username == USERNAME) {
-            var marker = new L.Marker(markerLocation, {icon: markerIcon, draggable: true});
-        }
-        else {
-            var marker = new L.Marker(markerLocation, {icon: markerIcon});
-        }
-        //var marker = new L.Marker(markerLocation);
-        //marker.bindPopup("<p><strong>"+profile.name+"</strong></p><p>"+profile.location+"</p>");
-        var popupHTML = ""+ 
-            "<table style='width:260px'>" +
-                "<tr>"+
-                    "<td><img src='"+profile.pic+"'/></td><td><p><strong>"+profile.name+"</strong></p><p>"+profile.location+"</p></td>"+
-                "<tr>"+
-            "</table>" +
-        "";
-        marker.bindPopup(popupHTML, {maxWidth: 400});
-        map.addLayer(marker);
-        return marker;
-    }
+    $.each(PROFILES, function (index, ciphertext) {
+        var url = 'http://www.odesk.com/api/profiles/v1/providers/'+ciphertext+'/brief.json';
+        console.log(url);
+        $.get(proxy_url(url), on_odesk_profile);
+    });
     
     /*
     $.get(PROFILES_URL, function (data) {
