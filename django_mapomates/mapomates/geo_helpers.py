@@ -1,6 +1,7 @@
 import urllib
 import urllib2
 import json
+import logging
 
 def get_nominatim_data(loc_string, format='json'):
     """
@@ -29,9 +30,14 @@ def get_coords(loc_string):
     ('51.5237987', '-0.1584539')
     """
     data = json.loads(get_nominatim_data(loc_string, 'json'))
-    return str(data[0]['lat']), str(data[0]['lon'])
+    try:
+        coords = str(data[0]['lat']), str(data[0]['lon'])
+    except Exception, exc:
+        logging.error('get_coords failed for %r with %r: %r' % (loc_string, data, exc))
+        coords = ['', '']
+    return coords
+
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-

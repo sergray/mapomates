@@ -1,3 +1,4 @@
+import logging
 import random
 import urllib, urllib2
 
@@ -56,9 +57,9 @@ def users_list(request):
                 'name': p.name,
                 'username': p.username,
                 'pic': p.portrait_url,
-                'location': ', '.join([p.city, p.country]),
-                #'coords': [float(p.lat), float(p.lon)],
-                'coords': [0.0, 0.0],  # FIXME when lat, lon will be geocoded
+                'location': p.location,
+                'coords': [float(p.lat), float(p.lon)],
+                #'coords': [0.0, 0.0],  # FIXME when lat, lon will be geocoded
             }
         except Exception, exc:
             logging.error("Skipping mate_data for %r: %r" % (p, exc))
