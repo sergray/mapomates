@@ -91,6 +91,11 @@ $(document).ready(function () {
     map.setView(london, 2).addLayer(cloudmade);
     Map = map;
 
+    $('#reset-search-button').click(function(event) {
+        event.preventDefault();
+        window.location = '/';
+    });
+
     $.each(PROFILES, function (index, ciphertext) {
         //var url = 'http://www.odesk.com/api/profiles/v1/providers/'+ciphertext+'/brief.json';
         var url = '/profile/'+ciphertext+'/';
