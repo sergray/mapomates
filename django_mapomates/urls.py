@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     (r'^accounts/$', 'django.contrib.auth.views.login'),
     (r'^accounts/', include('django.contrib.auth.urls')),
     url(r'', include('mapomates.urls')),
+    url(r'', include('profiles.urls')),
     # Examples:
     # url(r'^$', 'django_mapomates.views.home', name='home'),
     # url(r'^django_mapomates/', include('django_mapomates.foo.urls')),
