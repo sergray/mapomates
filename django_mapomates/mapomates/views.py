@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import simplejson as json
@@ -6,11 +8,19 @@ from annoying.decorators import render_to
 
 from mapomates.models import Provider, Team, Membership
 
+meanings = [
+    "Two Brave Developers",
+    "Twisted By Design",
+    "There Be Dragons",
+    "Two Business Days",
+]
+
 @login_required
 @render_to('home.html')
 def home(request):
     """ Show map with users """
-    return {}
+    tbd_meaning = random.choice(meanings) 
+    return {'tbd_meaning': tbd_meaning}
 
 
 def ajax_response(data):
