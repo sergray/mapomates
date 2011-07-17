@@ -11,6 +11,7 @@
         var STATIC_URL = '/static/';
         var PROFILES_URL = STATIC_URL+'stubs/profiles.js';
         //var PROFILES_URL = '{% url all-json-profiles %}';
+        var PROXY_URL = '{% url ajax_proxy %}';
         {% if user.is_authenticated %}
         var USERNAME = '{{ user.username }}';
         {% else %}
@@ -25,9 +26,15 @@
 <body>
     {% if user.is_authenticated %}
     <p>Hello, {{ user.username }}</p>
-    <p><a href="#">Click here</a> to change your location. Or simply drag your marker on the map</p>
+    <p>Drag your marker on the map to change your location</p>
     {% else %}
     {% endif %}
+    <div id="controls">
+        <form id="search_form" action="http://www.odesk.com/api/profiles/v1/search/providers.json" method="get">
+            <p><input id="search" type="text" name="q" value=""/><button type="submit">Search</button></p>
+            <input type="hidden" name="Page" value="0;10"/>
+        </form>
+    </div>
     <div class="wrapper">
         <div id="profiles">
             <table>

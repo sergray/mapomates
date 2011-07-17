@@ -1,4 +1,5 @@
 import random
+import urllib, urllib2
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -26,7 +27,15 @@ def home(request):
 def ajax_response(data):
     json_data = json.dumps(data)
     return HttpResponse(json_data, content_type='application/json')
-    
+
+def ajax_proxy(request):
+    """
+    A proxy method to bypass cross-domain AJAX restriction
+    """
+    url = urllib.unquote(request.GET['url'])
+    print "DEBUG: " + url
+    data = urllib2.urlopen(url).read()
+    return ajax_response(data)
 
 @login_required
 def users_list(request):
