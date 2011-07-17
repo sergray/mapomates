@@ -29,7 +29,7 @@ def home(request):
         data = json.loads(urllib2.urlopen(url).read())
         profiles = [prov['ciphertext'] for prov in data['providers']['provider']]
     tbd_meaning = random.choice(meanings) 
-    return {'tbd_meaning': tbd_meaning, 'profiles': json.dumps(profiles[:10])}
+    return {'tbd_meaning': tbd_meaning, 'profiles': json.dumps(profiles[:20])}
 
 
 def ajax_response(data):

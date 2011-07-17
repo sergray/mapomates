@@ -22,9 +22,9 @@ function createMarker2 (profile, number) {
         var marker = new L.Marker(markerLocation, {icon: markerIcon});
     }
     var popupHTML = ""+ 
-        "<table style='width:260px'>" +
+        "<table style='width:200px'>" +
             "<tr>"+
-                "<td><img src='"+profile.portrait+"'/></td><td><p><strong>"+profile.username+"</strong></p><p>"+profile.location+"</p></td>"+
+                "<td><img src='"+profile.portrait+"'/></td><td><p><strong>"+profile.full_name+"</strong></p><p>"+profile.location+"</p></td>"+
             "<tr>"+
         "</table>" +
     "";
@@ -34,7 +34,10 @@ function createMarker2 (profile, number) {
         "<tr>"+
             "<td><img src='"+iconUrl+"'/></td>"+
             "<td><img src='"+profile.portrait+"'/></td>"+
-            "<td><p><strong>"+profile.username+"</strong></p><p>"+profile.location+"</p></td>"+
+            "<td>" +
+            "<p><strong>"+profile.full_name+"</strong>"+
+            " (<a href='https://www.odesk.com/users/"+profile.cipher_text+"' target='_blank'>Profile</a>)</p>"+
+            "<p>"+profile.location+"</p></td>"+
         "<tr>"+
     "";
     $('#profiles table').append($(profileHTML));
@@ -65,7 +68,7 @@ function on_odesk_profile(data) {
     if (profile.portrait == '') 
         profile.portrait = STATIC_URL+'img/noimage.png';
     index = profiles.push(profile)-1;
-    createMarker2(profile, index);
+    createMarker2(profile, index+1);
 }
 
 $(document).ready(function () {

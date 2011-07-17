@@ -39,8 +39,9 @@ def get_profile(request, cipher_text):
         #import pdb; pdb.set_trace()
         profile = Profile.objects.create(
             cipher_text=cipher_text,
-            username=provider['dev_full_name'],
-            portrait=provider['dev_portrait'],
+            full_name=provider['dev_full_name'],
+            portrait=provider['dev_portrait_50'],
+            location = location,
             lat=lat,
             lon=lon,
         )
