@@ -55,6 +55,8 @@ def post_profile(request, cipher_text):
         profile = Profile(cipher_text=cipher_text)
     profile_form = ProfileForm(request.POST, instance=profile)
     if profile_form.is_valid():
+        # TODO reverse geocoding of address by geo location
+        # TODO update oDesk profile
         profile_form.save()
         return {'status': 'ok'}
     else:
