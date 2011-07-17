@@ -4,7 +4,11 @@ from django.http import HttpResponseNotFound, HttpResponseBadRequest
 from django.views.decorators.http import require_http_methods
 from django.forms.models import model_to_dict
 
+from django_odesk.core.clients import RequestClient
+
 from annoying.decorators import ajax_request
+
+from mapomates.geo_helpers import get_coords
 
 from profiles.models import Profile
 from profiles.forms import ProfileForm
@@ -15,7 +19,31 @@ def get_profile(request, cipher_text):
     try:
         profile = Profile.objects.get(cipher_text=cipher_text)
     except Profile.DoesNotExist:
-        return HttpResponseNotFound()
+        client = RequestClient(request)
+        # TODO run asynchronously
+        try:
+            provider = client.provider.get_provider(cipher_text)
+        except Exception, exc:
+            logging.error(
+                "get_provider for %r failed: %r" % (
+                    cipher_text,
+                    exc
+            ))
+            return HttpResponseBadRequest()
+        location = ', '.join([
+            provider['dev_city'],
+            provider['dev_country'],
+        ])
+        # TODO run asynchronously
+        lat, lon = get_coords(location)
+        import pdb; pdb.set_trace()
+        profile = Profile.objects.create(
+            cipher_text=cipher_text,
+            username=provider['dev_full_name'],
+            portrait=provider['dev_portrait'],
+            lat=lat,
+            lon=lon,
+        )
     return model_to_dict(profile)
 
 
