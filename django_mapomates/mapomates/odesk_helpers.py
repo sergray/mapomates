@@ -161,7 +161,7 @@ def get_user_reference(client):
     try:
         role = client.hr.get_user_role()['userrole'][0]
     except Exception, exc:
-        logging.error('Failed to get role for %r team: %r' % (team, exc))
+        logging.error('Failed to get role: %r' % (exc,))
         return role
     return role['user__reference']
 

@@ -33,7 +33,11 @@ def home(request):
     # TODO better caching
     if not 'cipher_text' in request.session:
         user_ref = get_user_reference(client)
-        request.session['cipher_text'] = get_user_cipher_text(client, user_ref)
+        if user_ref:
+            cipher_text = get_user_cipher_text(client, user_ref)
+        else:
+            cipher_text = ''
+        request.session['cipher_text'] = cipher_text
     cipher_text = request.session['cipher_text']
     profiles.append(cipher_text)
 
