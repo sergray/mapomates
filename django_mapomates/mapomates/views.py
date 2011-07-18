@@ -31,14 +31,17 @@ def home(request):
     if request.user.is_authenticated:
         client = RequestClient(request)
         # TODO better caching
-        if not 'cipher_text' in request.session:
+        if 'cipher_text' in request.session:
+            cipher_text = request.session['cipher_text']
+        else:
+            cipher_text = ''
+        if not cipher_text:
             user_ref = get_user_reference(client)
             if user_ref:
                 cipher_text = get_user_cipher_text(client, user_ref)
             else:
                 cipher_text = ''
             request.session['cipher_text'] = cipher_text
-        cipher_text = request.session['cipher_text']
         profiles.append(cipher_text)
 
     if query:
