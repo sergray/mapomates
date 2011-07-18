@@ -26,9 +26,13 @@
 </head>
 <body>
     {% if user.is_authenticated %}
-    <p>Hello, {{ user.username }}</p>
-    <p>Drag your marker on the map to change your location</p>
+        <p>Hello, {{ user.username }}</p>
+        <p>Enter the search query to see oDesk providers on the map</p>
+        <p>Drag your marker on the map to change your location</p>
     {% else %}
+        <p>Hello, Guest</p>
+        <p>Enter the search query to see oDesk providers on the map</p>
+        <p><a href="{% url django_odesk.auth.views.authenticate %}?next={{ next }}">Log in with oDesk account</a> to change your location</p>
     {% endif %}
     <div id="controls">
         <form id="search_form" action="." method="get">

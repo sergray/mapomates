@@ -22,24 +22,24 @@ meanings = [
 ]
 
 
-@login_required
 @render_to('home.html')
 def home(request):
     """ Show map with users including authenticated user """
     query = request.GET
     profiles = []
-    client = RequestClient(request)
 
-    # TODO better caching
-    if not 'cipher_text' in request.session:
-        user_ref = get_user_reference(client)
-        if user_ref:
-            cipher_text = get_user_cipher_text(client, user_ref)
-        else:
-            cipher_text = ''
-        request.session['cipher_text'] = cipher_text
-    cipher_text = request.session['cipher_text']
-    profiles.append(cipher_text)
+    if request.user.is_authenticated:
+        client = RequestClient(request)
+        # TODO better caching
+        if not 'cipher_text' in request.session:
+            user_ref = get_user_reference(client)
+            if user_ref:
+                cipher_text = get_user_cipher_text(client, user_ref)
+            else:
+                cipher_text = ''
+            request.session['cipher_text'] = cipher_text
+        cipher_text = request.session['cipher_text']
+        profiles.append(cipher_text)
 
     if query:
         url = 'http://www.odesk.com/api/profiles/v1/search/providers.json?'+\

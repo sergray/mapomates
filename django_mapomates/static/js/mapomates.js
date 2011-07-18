@@ -43,12 +43,12 @@ function createMarker2 (profile, number) {
         iconUrl += 'img/mapicons-odesk/number_'+number+'.png';
     var markerIcon = new ProfileIcon(iconUrl);
     var markerLocation = new L.LatLng(Number(profile.lat), Number(profile.lon));
-    if (profile.username == USERNAME) {
+    /*if (profile.username == USERNAME) {
         var marker = new L.Marker(markerLocation, {icon: markerIcon, draggable: true});
     }
-    else {
+    else {*/
         var marker = new L.Marker(markerLocation, {icon: markerIcon, draggable: (number==0)?true:false});
-    }
+    //}
     var popupHTML = ""+ 
         "<table style='width:200px'>" +
             "<tr>"+
