@@ -1,6 +1,6 @@
 import urllib
 import urllib2
-import json
+from django.utils import simplejson as json
 import logging
 
 def get_nominatim_data(loc_string, format='json'):
