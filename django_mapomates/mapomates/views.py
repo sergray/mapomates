@@ -45,7 +45,8 @@ def home(request):
         url = 'http://www.odesk.com/api/profiles/v1/search/providers.json?'+\
                 urllib.urlencode(request.GET)
         data = json.loads(urllib2.urlopen(url).read())
-        profiles += [prov['ciphertext'] for prov in data['providers']['provider']]
+        if 'provider' in data['providers']:
+            profiles += [prov['ciphertext'] for prov in data['providers']['provider']]
     tbd_meaning = random.choice(meanings)
     return {'tbd_meaning': tbd_meaning, 'profiles': json.dumps(profiles[:21])}
 
