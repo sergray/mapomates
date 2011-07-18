@@ -26,7 +26,7 @@
 </head>
 <body>
     {% if user.is_authenticated %}
-        <p>Hello, {{ user.username }}</p>
+        <p>Hello, {{ user.username }} (<a href="{% url django.contrib.auth.views.logout %}">Log out</a>)</p>
         <p>Enter the search query to see oDesk providers on the map</p>
         <p>Drag your marker on the map to change your location</p>
     {% else %}
