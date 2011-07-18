@@ -78,25 +78,13 @@ function proxy_url(url) {
 }
 
 
-function update_coords(profile_index) {
-    var profile = profiles[profile_index];
-    url = "http://nominatim.openstreetmap.org/search?format=json&q="+profile.location.replace(' ','+');
-    $.get(proxy_url(url), function (data) {
-        var result = $.parseJSON(data);
-        profile.coords[0] = Number(result[0].lat);
-        profile.coords[1] = Number(result[0].lon);
-        createMarker2(profile, profile_index);
-    });
-}
-
 function on_odesk_profile(data, index) {
     console.log(data);
     var profile = data;
-    console.log('SUCCESS ')
-    console.log(profile);
     if (profile.portrait == '') 
         profile.portrait = STATIC_URL+'img/noimage.png';
-    createMarker2(profile, index);
+    number = profiles.push(profile);
+    createMarker2(profile, number);
 }
 
 $(document).ready(function () {
